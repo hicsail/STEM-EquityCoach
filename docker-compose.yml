@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  chroma-db:
+    image: ghcr.io/chroma-core/chroma:latest
+    container_name: chroma-db
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ALLOW_RESET=TRUE
+    ports:
+      - 8000:8000
