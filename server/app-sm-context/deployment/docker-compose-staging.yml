@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  web:
+    image: hicsail/stem-equity-coach-sm:staging
+    ports:
+      - 5010:5000
