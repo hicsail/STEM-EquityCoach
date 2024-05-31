@@ -14,11 +14,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the content of the app code to the working directory
 COPY . /app/
 
-FROM nginx
-COPY nginx.conf /etc/nginx/nginx.conf
-
 # Expose the port the app runs on:
-EXPOSE 80 5000
+EXPOSE 5000
 
 # Run the Flask application:
-CMD service nginx start && python run.py
+CMD ["python", "run.py"]
