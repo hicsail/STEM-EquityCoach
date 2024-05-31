@@ -36,14 +36,14 @@
 
 1. Navigate to the folder `/google_drive`.
 
-2. (Optional) Create Python virtual environment `python -m venv .venv`.
+2. _(Optional) Create Python virtual environment `python -m venv .venv`._
 
-3. (Optional) Activate the virtual environment `source .venv/bin/activate`. You can deactivate it by running `deactivate`.
+3. _(Optional) Activate the virtual environment `source .venv/bin/activate`. You can deactivate it by running `deactivate`._
 
 4. Install dependencies `pip install -r requirements.txt`.
 
-5. (Optional) Add persisted Chroma DB. Simply move your `chroma` folder under `/google_drive`.
+5. _(Optional) Add persisted Chroma DB. Simply move your `chroma` folder under `/google_drive`._
 
 6. Run the scripts `python main.py`.
 
-When script is running, your browser may ask you to login using your Google account on the first run. If you need to load files from Google Drive, make sure the folder is visible to your account. A message will ask you for folder ID. You can find the folder ID in the URL. For example, in the link https://drive.google.com/drive/folders/XXXXXXXX, the `XXXXXXXX` should be the folder ID to enter.
+When script is running, your browser may ask you to login using your Google account on the first run. If you need to load files from Google Drive, make sure the folder is visible to your account. A message will ask you for folder ID. You can find the folder ID in the URL. For example, in the link https://drive.google.com/drive/folders/XXXXXXXX, the `XXXXXXXX` part is the folder ID to enter.
