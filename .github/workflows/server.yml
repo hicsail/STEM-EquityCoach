@@ -36,3 +36,6 @@ jobs:
           context: server/app-sm-context
           push: true
           tags: hicsail/stem-equity-coach-sm:staging
+          build_args: |
+            - OLLAMA_URL=${{ secrets.OLLAMA_URL }}
+            - GOOGLE_DRIVE_FOLDER_ID=${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
