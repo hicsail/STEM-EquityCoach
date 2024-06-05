@@ -5,6 +5,5 @@ langchain==0.1.19
 langchain-community==0.0.38
 langchain-core==0.1.52
 langchain-google-community[drive]==1.0.4
-
-PyPDF2
-dotenv
+PyPDF2==3.0.1
+python-dotenv==1.0.0
