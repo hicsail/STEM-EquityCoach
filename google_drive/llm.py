@@ -1,6 +1,8 @@
 import os
 import time
 
+from dotenv import load_dotenv
+
 from langchain_community.llms import Ollama as OllamaBase
 from langchain_google_community import GoogleDriveLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -28,7 +30,9 @@ qa_prompt = ChatPromptTemplate.from_messages(
 
 class Ollama:
     def __init__(self):
-        self.ollama = OllamaBase(base_url='http://localhost:11434', model='llama2')
+        load_dotenv()
+
+        self.ollama = OllamaBase(base_url=os.getenv('OLLAMA_URL'), model='llama2')
         self.chroma_init()
 
     def chroma_init(self):
