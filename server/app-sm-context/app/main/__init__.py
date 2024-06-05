@@ -1,4 +1,5 @@
 from flask import Blueprint
+from app.services.ollama import Ollama
 
 main = Blueprint('main', __name__)
 
