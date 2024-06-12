@@ -4,7 +4,8 @@ import time
 from langchain_community.llms import Ollama as OllamaBase
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import GPT4AllEmbeddings
+# from langchain_community.embeddings import GPT4AllEmbeddings
+from langchain_community.embeddings import OllamaEmbeddings
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_google_community import GoogleDriveLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -34,7 +35,8 @@ class Ollama:
 
         if os.path.exists(CHROMA_PATH):
             print('Chroma already exists. Loading...')
-            self.db = Chroma(persist_directory=CHROMA_PATH, embedding_function=GPT4AllEmbeddings())
+            # self.db = Chroma(persist_directory=CHROMA_PATH, embedding_function=GPT4AllEmbeddings())
+            self.db = Chroma(persist_directory=CHROMA_PATH, embedding_function=OllamaEmbeddings(base_url=os.getenv('OLLAMA_URL')))
             self.retriever = self.db.as_retriever(search_kwargs={'k': 4})
             self.qa_chain = create_stuff_documents_chain(self.ollama, self.qa_prompt)
         
@@ -67,7 +69,8 @@ class Ollama:
         print('Checking if Chroma exists...')
         if not os.path.exists(CHROMA_PATH):
             print('Chroma does not exist. Creating...')
-            self.db = Chroma.from_documents(chunks, GPT4AllEmbeddings(), persist_directory=CHROMA_PATH)
+            # self.db = Chroma.from_documents(chunks, GPT4AllEmbeddings(), persist_directory=CHROMA_PATH)
+            self.db = Chroma.from_documents(chunks, OllamaEmbeddings(base_url=os.getenv('OLLAMA_URL')), persist_directory=CHROMA_PATH)
             print('Creating retriever...')
             self.retriever = self.db.as_retriever(search_kwargs={'k': 4})
             print('Creating QA chain...')
