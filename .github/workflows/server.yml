@@ -37,6 +37,6 @@ jobs:
           push: true
           tags: hicsail/stem-equity-coach-sm:staging
           build_args: |
-            - JSON_CREDS=${{ secrets.JSON_CREDS }}
-            - OLLAMA_URL=${{ secrets.OLLAMA_URL }}
-            - GOOGLE_DRIVE_FOLDER_ID=${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+            JSON_CREDS=${{ secrets.JSON_CREDS }}
+            OLLAMA_URL=${{ secrets.OLLAMA_URL }}
+            GOOGLE_DRIVE_FOLDER_ID=${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
