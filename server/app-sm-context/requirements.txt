@@ -4,6 +4,14 @@ Werkzeug==2.0.1
 langchain==0.1.19
 langchain-community==0.0.38
 langchain-core==0.1.52
+langchain-chroma==0.1.0
 langchain-google-community[drive]==1.0.4
-PyPDF2==3.0.1
-python-dotenv==1.0.0
+#gpt4all==2.6.0
+
+PyPDF2
+python-dotenv
+
+google-api-python-client
+google-auth
+google-auth-httplib2
+google-auth-oauthlib
