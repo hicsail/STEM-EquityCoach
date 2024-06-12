@@ -20,7 +20,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Create the .credentials directory and pass the credentials content
 RUN mkdir -p /root/.credentials
-RUN echo ${JSON_CREDS} > /root/.credentials/credentials.json
+COPY credentials.json /root/.credentials/credentials.json
+# RUN echo ${JSON_CREDS} > /root/.credentials/credentials.json
 
 # Set environment variables for Google credentials
 ENV GOOGLE_APPLICATION_CREDENTIALS=/root/.credentials/credentials.json
