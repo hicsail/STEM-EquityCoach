@@ -44,6 +44,7 @@ class Ollama:
 
         print('Time taken to initialize Chroma: ', timeend - timestart, 'seconds')
 
+    # FIRST PART
     def load_google_documents(self, id, recursive=True, chunk_size=500, chunk_overlap=10):
         timestart = time.time()
 
@@ -66,6 +67,7 @@ class Ollama:
         print('Splitting documents...')
         chunks = text_splitter.split_documents(data)
 
+        # FIRST PART
         print('Checking if Chroma exists...')
         if not os.path.exists(CHROMA_PATH):
             print('Chroma does not exist. Creating...')
