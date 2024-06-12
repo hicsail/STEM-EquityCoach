@@ -1,16 +1,12 @@
-import os
-
 from flask import Flask
+from app.services.ollama import create_ollama
 
 def create_app():
     app = Flask(__name__)
 
-    from app.main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    app.config['OLLAMA_INSTANCE'] = create_ollama()
 
-    from app.services.ollama import Ollama
-    global ollama
-    ollama = Ollama()
-    ollama.load_google_documents(id=os.getenv('GOOGLE_DRIVE_FOLDER_ID'))
+    from app import routes
+    app.register_blueprint(routes.bp)
 
     return app

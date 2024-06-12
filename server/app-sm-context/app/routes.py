@@ -1,13 +1,15 @@
-from flask import request, jsonify
-from app.main import main
-from app.main import ollama
+from flask import Blueprint, request, jsonify, current_app
 
-@main.route('/health', methods=['GET'])
+bp = Blueprint('main', __name__)
+
+@bp.route('/health', methods=['GET'])
 def health():
     return jsonify(True)
 
-@main.route('/inquire', methods=['POST'])
+@bp.route('/inquire', methods=['POST'])
 def inquire():
+    ollama = current_app.config['OLLAMA_INSTANCE']
+    
     try:
         data = request.get_json()
         question = data['question']
