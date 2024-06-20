@@ -5,12 +5,16 @@ from dotenv import load_dotenv
 
 from langchain_community.llms import Ollama as OllamaBase
 from langchain_google_community import GoogleDriveLoader
+from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import GPT4AllEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
+
+import google_drive
+import utils
 
 import warnings
 from langchain._api import LangChainDeprecationWarning  # TODO: can be removed in the future
@@ -23,6 +27,7 @@ Answer the user's question based on the context below. If the context doesn't co
 <context>{context}</context>
 """
 CHROMA_PATH = './chroma'
+DOWNLOAD_BATCH_SIZE = 3
 
 qa_prompt = ChatPromptTemplate.from_messages(
     [("system", SYSTEM_TEMPLATE), ("human", "{input}")]
@@ -33,6 +38,7 @@ class Ollama:
         load_dotenv()
 
         self.ollama = OllamaBase(base_url=os.getenv('OLLAMA_URL'), model='llama2')
+        self.google = google_drive.GoogleDriveClient()
         self.chroma_init()
 
     def chroma_init(self):
@@ -47,6 +53,9 @@ class Ollama:
         print('Time taken to initialize Chroma: ', timeend - timestart, 'seconds')
 
     def __split_and_add(self, data, chunk_size=500, chunk_overlap=10):
+        if not data:
+            return
+
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
         chunks = text_splitter.split_documents(data)
 
@@ -57,18 +66,57 @@ class Ollama:
         else:
             self.db.add_documents(chunks)
 
-    def load_google_documents(self, id, chunk_size=500, chunk_overlap=10):
+    def load_google_drive(self, id, chunk_size=500, chunk_overlap=10):
         timestart = time.time()
-        print('Loading documents from Google Drive...')
-        if id:
-            loader = GoogleDriveLoader(folder_id=id, recursive=True)
-            data = loader.load()
-        else:
-            raise ValueError('No id provided')
-        
-        self.__split_and_add(data, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-        timeend = time.time()
 
+        # Loading PDFs from Google Drive
+        print('Loading PDFs from Google Drive...')
+        loader = GoogleDriveLoader(folder_id=id, recursive=True, service_account_key=os.getenv('GOOGLE_CREDS_PATH'))
+        data = loader.load()
+        
+        self.__split_and_add(data, chunk_size, chunk_overlap)
+        print('PDFs loaded')
+
+        # Load other files from Google Drive
+        files, compressed_files = self.google.get_file_ids(id, ignore_ext=['pdf'])
+
+        # Download/extract/load compressed files
+        for file in compressed_files:
+            print('Downloading and extracting compressed file...')
+            path, meta = self.google.download_file(file)
+            extracted_path = utils.extract_file(path)
+            loader = PyPDFDirectoryLoader(extracted_path)
+            data = loader.load()
+            self.__split_and_add(data, chunk_size, chunk_overlap)
+            print(f'Compressed file {meta["name"]} loaded')
+
+            # Delete extracted files
+            utils.remove_directory(extracted_path)
+            print('Extracted files deleted')
+
+        # Download and load other files to Chroma
+        cnt = DOWNLOAD_BATCH_SIZE
+        batch = 0
+        print('Downloading and loading other files...')
+        while files:
+            file_id = files.pop()
+            path, _ = self.google.download_file(file_id)
+            cnt -= 1
+
+            if cnt == 0 or not files:
+                print(f'Batch {batch} loaded')
+                batch += 1
+                cnt = DOWNLOAD_BATCH_SIZE
+                loader = PyPDFDirectoryLoader(os.getenv('DOWNLOAD_PATH'))
+                data = loader.load()
+                self.__split_and_add(data, chunk_size, chunk_overlap)
+                print(f'Batch {batch} loaded')
+
+                # remove everything in the download path
+                utils.clear_directory(os.getenv('DOWNLOAD_PATH'))
+                print('Download path cleared')
+
+        timeend = time.time()
         print('Time taken to load documents: ', timeend - timestart, 'seconds')
     
     def ask(self, question, print_result = False):
