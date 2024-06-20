@@ -7,7 +7,7 @@ def main():
     load_drive = input('Load from Google Drive? (y/n) > ')
     if load_drive == 'y':
         folder_id = input('Enter the folder id > ')
-        ollama.load_google_documents(id=folder_id.strip())
+        ollama.load_google_drive(id=folder_id.strip())
 
     while True:
         question = input('\033[92m' + 'Ask a question > ' + '\033[0m')
