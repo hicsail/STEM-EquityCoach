@@ -5,6 +5,8 @@ langchain-chroma==0.1.0
 langchain-google-community[drive]==1.0.4
 gpt4all==2.6.0
 PyPDF2
+pypdf
+rarfile
 google-api-python-client
 google-auth
 google-auth-httplib2
