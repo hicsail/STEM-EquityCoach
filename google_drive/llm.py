@@ -69,13 +69,6 @@ class Ollama:
             batch = chunks[i:i + max_batch_size]
             self.db.add_documents(batch)
             print(f'Batch {i // max_batch_size + 1} added, size: {len(batch)}')
-            
-        # if not os.path.exists(CHROMA_PATH):
-        #     self.db = Chroma.from_documents(chunks, GPT4AllEmbeddings(), persist_directory=CHROMA_PATH)
-        #     self.retriever = self.db.as_retriever(search_kwargs={'k': 4})
-        #     self.qa_chain = create_stuff_documents_chain(self.ollama, qa_prompt)
-        # else:
-        #     self.db.add_documents(chunks)
 
     def load_google_drive(self, id, chunk_size=500, chunk_overlap=10):
         timestart = time.time()
