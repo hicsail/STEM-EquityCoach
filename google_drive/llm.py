@@ -70,6 +70,20 @@ class Ollama:
             self.db.add_documents(batch)
             print(f'Batch {i // max_batch_size + 1} added, size: {len(batch)}')
 
+    def load_local(self, path=None, chunk_size=500, chunk_overlap=10):
+        if path is None:
+            path = os.getenv('LOCAL_PATH')
+
+        timestart = time.time()
+
+        loader = PyPDFDirectoryLoader(path)
+        data = loader.load()
+        self.__split_and_add(data, chunk_size, chunk_overlap)
+        print('PDFs loaded')
+
+        timeend = time.time()
+        print('Time taken to load documents: ', timeend - timestart, 'seconds')
+
     def load_google_drive(self, id, chunk_size=500, chunk_overlap=10):
         timestart = time.time()
 

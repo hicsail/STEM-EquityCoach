@@ -4,6 +4,10 @@ import time
 def main():
     ollama = llm.Ollama()
 
+    load_local = input('Load from local? (y/n) > ')
+    if load_local == 'y':
+        ollama.load_local()
+
     load_drive = input('Load from Google Drive? (y/n) > ')
     if load_drive == 'y':
         folder_id = input('Enter the folder id > ')
