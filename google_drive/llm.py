@@ -137,12 +137,18 @@ class Ollama:
         timeend = time.time()
         print('Time taken to load documents: ', timeend - timestart, 'seconds')
     
-    def ask(self, question, print_result = False):
+    def ask(self, question, print_result = False, context="none"):
         chain = create_retrieval_chain(self.retriever, self.qa_chain)
         result = chain.invoke({'input': question})
 
         if print_result:
             print('\033[92m' + 'Input:' + '\033[97m', result['input'] + '\033[0m')
             print('\033[92m' + 'Answer:' + '\033[97m', result['answer'] + '\033[0m')
-            print('\033[92m' + 'Context:' + '\033[97m', str(result['context']) + '\033[0m')
+            if context != 'none' and 'context' in result:
+                print('\033[92m' + 'Context:')
+                for i, doc in enumerate(result['context']):
+                    if context == 'name':
+                        print(f'\033[97mDocument {i + 1} name:\033[97m {doc.metadata["source"]}\033[0m')
+                    elif context == 'raw':
+                        print(f'\033[97mDocument {i + 1} raw:\033[97m {str(doc)}\033[0m')
         

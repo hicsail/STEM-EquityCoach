@@ -1,8 +1,13 @@
 import llm
 import time
+import argparse
 
 def main():
     ollama = llm.Ollama()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--context", type=str, choices=["name", "raw", "none"], default="none", help="Check flag")
+    args = parser.parse_args()
 
     load_local = input('Load from local? (y/n) > ')
     if load_local == 'y':
@@ -18,7 +23,7 @@ def main():
         if question == 'exit':
             break
         timestart = time.time()
-        ollama.ask(question, print_result=True)
+        ollama.ask(question, print_result=True, context=args.context)
         timeend = time.time()
         print('Time taken to answer: ', timeend - timestart, 'seconds')
 
