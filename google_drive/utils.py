@@ -4,6 +4,9 @@ import zipfile
 import rarfile
 import tarfile
 
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import GPT4AllEmbeddings
+
 def is_compressed_file(mime_type) -> bool:
     compressed_mime_types = [
         'application/zip',
@@ -56,3 +59,16 @@ def clear_directory(path) -> bool:
             return False
         
     return True
+
+# merge chroma2 into chroma1
+def merge_chroma_dbs(chroma_path1, chroma_path2):
+    chroma1 = Chroma(persist_directory=chroma_path1, embedding_function=GPT4AllEmbeddings())
+    chroma2 = Chroma(persist_directory=chroma_path2, embedding_function=GPT4AllEmbeddings())
+
+    chroma2_data = chroma2._collection.get(include=['documents','metadatas','embeddings'])
+    chroma1._collection.add(
+        documents=chroma2_data['documents'],
+        metadatas=chroma2_data['metadatas'],
+        embeddings=chroma2_data['embeddings'],
+        ids=chroma2_data['ids']
+    )
