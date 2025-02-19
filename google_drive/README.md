@@ -24,7 +24,7 @@
    > 3. Click on **CREATE CREDENTIALS**, then select **OAuth client ID**. If you wish to run it on your local machine, choose **Desktop app** as your **Application type**. Then, click on **CREATE**.
    > 4. After creating the credential, you will see a pop-up window (if not, you can click on the download button under **Actions** column). Download the credential as JSON.
 
-4. Now you should have your credential downloaded to your machine as a `JSON` file. The filename should be something like `client_secret_*.json`. You will need it in `~/,credentials` directory. If you've never used Google Auth before, you may need to setup the directory by yourself.
+4. Now you should have your credential downloaded to your machine as a `JSON` file. The filename should be something like `client_secret_*.json`. You will need it in `~/.credentials` directory. If you've never used Google Auth before, you may need to setup the directory by yourself.
 
 5. To setup the directory, run `mkdir ~/.credentials` in terminal.
 
